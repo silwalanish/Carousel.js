@@ -1,1 +1,4 @@
-Carousel.js
+# Carousel.js
+
+Demo:
+https://silwalanish.github.io/Carousel.js

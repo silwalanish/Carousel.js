@@ -21,7 +21,7 @@ class Carousel {
     this.el.style.width = this.width + "px";
     this.el.style.height = this.height + "px";
     this.el.style.overflow = "hidden";
-    this.el.style.border = "1px solid black";
+    this.el.style.position = "relative";
     
     this.imageCont.style.width = this.images.length * this.width + "px";
     this.imageCont.style.lineHeight = "0";
@@ -33,9 +33,50 @@ class Carousel {
       image.style.height = this.height + "px";
     }
 
+    this.addButtons();
+    this.addBullets();
+
     this.currentIndex = 0;
 
+    this.bulletList.children[this.currentIndex].classList.add('active');
+    this.startLoop();
+  }
+
+  startLoop () {
     this.changer = setInterval(() => { this.next(); }, this.options.delay || 2000);
+  }
+
+  clearTime () {
+    clearInterval(this.changer);
+  }
+
+  addButtons () {
+    let prevBtn = document.createElement('div');
+    prevBtn.classList.add('prev');
+    this.el.appendChild(prevBtn);
+    prevBtn.addEventListener('click', () => {
+      this.prev();
+    });
+    let nextBtn = document.createElement('div');
+    nextBtn.classList.add('next');
+    this.el.appendChild(nextBtn);
+    nextBtn.addEventListener('click', () => {
+      this.next();
+    });
+  }
+
+  addBullets () {
+    this.bulletList = document.createElement("ul");
+    this.bulletList.classList.add('bullets-list');
+    for(let i = 0; i < this.images.length; i++){
+      let bullet = document.createElement("li");
+      bullet.classList.add('bullet');
+      bullet.addEventListener('click', () => {
+        this.jumpTo(i);
+      });
+      this.bulletList.appendChild(bullet);
+    }
+    this.el.appendChild(this.bulletList);
   }
 
   animateTo (n){
@@ -44,30 +85,40 @@ class Carousel {
     let diffMargin = endMargin - currentMargin;
     let speed = 0.01;
     let progress = 0;
-    
+
+    clearInterval(this.animator);
+
     this.animator = setInterval(() => {
       this.imageCont.style.marginLeft = -(currentMargin + diffMargin * progress) + "px";
       progress += speed;
       if(progress >= 1){
         this.imageCont.style.marginLeft = -endMargin + "px";
         clearInterval(this.animator);
+        this.startLoop();
       }
     }, 100 * speed);
     
   }
 
   prev () {
-    let prevIndex  = (this.currentIndex - 1) % this.images.length;
-    this.animateTo(prevIndex);
-    this.currentIndex = prevIndex;
+    let prevIndex  = (this.currentIndex - 1);
+    if(prevIndex < 0){
+      prevIndex = this.images.length + prevIndex;
+    }
+    this.jumpTo(prevIndex);
   }
 
   next () {
     let nextIndex = (this.currentIndex + 1) % this.images.length;
-    this.animateTo(nextIndex);
-    this.currentIndex = nextIndex;
+    this.jumpTo(nextIndex);
   }
 
-
+  jumpTo (i) {
+    this.clearTime();
+    this.animateTo(i);
+    this.bulletList.children[this.currentIndex].classList.remove('active');
+    this.currentIndex = i;
+    this.bulletList.children[i].classList.add('active');
+  }
 
 }

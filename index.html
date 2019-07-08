@@ -10,7 +10,7 @@
 </head>
 <body>
   
-  <div id="carousel-cont">
+  <div class="image-carousel">
     <div class="image-cont">
       <img src="./images/image1.jpeg" alt="Image 1">
       <img src="./images/image2.jpeg" alt="Image 2">
@@ -20,12 +20,29 @@
     </div>
   </div>
 
+  <div class="image-carousel-slow">
+      <div class="image-cont">
+        <img src="./images/image1.jpeg" alt="Image 1">
+        <img src="./images/image2.jpeg" alt="Image 2">
+        <img src="./images/image3.jpeg" alt="Image 3">
+        <img src="./images/image4.jpeg" alt="image 4">
+        <img src="./images/image5.jpg" alt="Image 5">
+      </div>
+    </div>
+
   <script src="./js/carousel.js"></script>
   <script>
-    var carousel = new Carousel(document.getElementById("carousel-cont"), {
+    Carousel.register(".image-carousel", {
       width: 800,
       height: 400
     });
+
+    Carousel.register(".image-carousel-slow", {
+      width: 600,
+      height: 400,
+      delay: 3000
+    });
+
   </script>
 </body>
 </html>

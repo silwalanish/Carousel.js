@@ -9,6 +9,8 @@ class Carousel {
     this.images = this.imageCont.children;
 
     this.options = options || {};
+    this.options.speed = this.options.speed || 0.01;
+    this.options.transitionTime = this.options.transitionTime || 100;
 
     this.width = this.options.width || this.images[0].width;
     this.height = this.options.height || this.images[0].height;
@@ -83,20 +85,19 @@ class Carousel {
     let currentMargin = this.currentIndex * this.width;
     let endMargin = n * this.width;
     let diffMargin = endMargin - currentMargin;
-    let speed = 0.01;
     let progress = 0;
 
     clearInterval(this.animator);
 
     this.animator = setInterval(() => {
       this.imageCont.style.marginLeft = -(currentMargin + diffMargin * progress) + "px";
-      progress += speed;
+      progress += this.options.speed;
       if(progress >= 1){
         this.imageCont.style.marginLeft = -endMargin + "px";
         clearInterval(this.animator);
         this.startLoop();
       }
-    }, 100 * speed);
+    }, this.options.transitionTime * this.options.speed);
     
   }
 
@@ -119,6 +120,13 @@ class Carousel {
     this.bulletList.children[this.currentIndex].classList.remove('active');
     this.currentIndex = i;
     this.bulletList.children[i].classList.add('active');
+  }
+
+  static register(selector, options) {
+    let elements = document.querySelectorAll(selector);
+    elements.forEach(element => {
+      new Carousel(element, options);
+    });
   }
 
 }

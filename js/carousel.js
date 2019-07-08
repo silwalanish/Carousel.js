@@ -9,7 +9,6 @@ class Carousel {
     this.images = this.imageCont.children;
 
     this.options = options || {};
-    this.options.speed = this.options.speed || 0.01;
     this.options.transitionTime = this.options.transitionTime || 100;
 
     this.width = this.options.width || this.images[0].width;
@@ -86,18 +85,19 @@ class Carousel {
     let endMargin = n * this.width;
     let diffMargin = endMargin - currentMargin;
     let progress = 0;
+    let speed = Math.abs(n - this.currentIndex) / this.options.transitionTime;
 
     clearInterval(this.animator);
 
     this.animator = setInterval(() => {
       this.imageCont.style.marginLeft = -(currentMargin + diffMargin * progress) + "px";
-      progress += this.options.speed;
+      progress += speed;
       if(progress >= 1){
         this.imageCont.style.marginLeft = -endMargin + "px";
         clearInterval(this.animator);
         this.startLoop();
       }
-    }, this.options.transitionTime * this.options.speed);
+    }, 1);
     
   }
 

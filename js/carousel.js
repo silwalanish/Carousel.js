@@ -97,7 +97,7 @@ class Carousel {
         clearInterval(this.animator);
         this.startLoop();
       }
-    }, 1);
+    }, speed * this.width);
     
   }
 
